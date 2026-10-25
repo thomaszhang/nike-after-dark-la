@@ -59,3 +59,18 @@ def test_pointer_and_keyboard_restore_handlers_remain():
     assert 'previewSavedControls = { following, fullRouteMode }' in JS
     assert 'following = previewSavedControls.following' in JS
     assert 'previewSavedView.center' in JS
+
+def test_square_mode_is_a_separate_adjacent_card_not_an_inline_heading_button():
+    parser = Parents()
+    parser.feed(HTML)
+    assert 'top-pair' in parser.parents['stats']
+    assert 'top-pair' in parser.parents['map-mode']
+    assert 'mode-card' in parser.parents['map-mode']
+    assert 'stats' not in parser.parents['map-mode']
+    assert 'info-header' not in parser.parents['map-mode']
+    assert 'aspect-ratio:1' in CSS
+    assert 'height:var(--mode-side,auto)' in CSS
+    assert 'grid-template-columns:minmax(0,1fr) var(--mode-side,30%)' in CSS
+    assert 'gap:8px; align-items:stretch' in CSS
+    assert 'directionObserver.observe' in JS
+    assert 'document.fonts?.ready.then(updateControlGeometry)' in JS

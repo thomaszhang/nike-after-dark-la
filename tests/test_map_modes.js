@@ -3,7 +3,7 @@ const test=require('node:test'), assert=require('node:assert/strict'),vm=require
 const source=fs.readFileSync(path.join(__dirname,'../app.js'),'utf8');
 function fixture(permission='denied') {
   const element=()=>({dataset:{},attrs:{},textContent:'',setAttribute(k,v){this.attrs[k]=v},addEventListener(){}});
-  const els=Object.fromEntries(['map-mode','mode-label','direction-label','direction-detail','heading-source','location-error'].map(k=>[k,element()]));
+  const els=Object.fromEntries(['map-mode','mode-label','mode-icon','direction-label','direction-detail','heading-source','location-error'].map(k=>[k,element()]));
   const calls={views:[],fits:[],permissions:0};
   const context=vm.createContext({els,calls,Number,Math,window:{addEventListener(){}},DeviceOrientationEvent:{requestPermission:async()=>{calls.permissions++;return permission}},
     map:{invalidateSize(){},setView(ll,z){calls.views.push({ll,z})},fitBounds(b,p){calls.fits.push(p)}},routeBounds:[],courseViewPadding:()=>({paddingTopLeft:[20,180],paddingBottomRight:[20,130]}),syncMapRotationOrigin(){},setMapRotationImmediately(){},renderNavigation(){updateLabel()},endCoursePreview(){},feet:m=>m*3.28084});

@@ -15,19 +15,17 @@
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icon-180.png">
   <link rel="stylesheet" href="leaflet.css?v=1.9.4">
-  <link rel="stylesheet" href="styles.css?v=31">
+  <link rel="stylesheet" href="styles.css?v=32">
 </head>
 <body>
   <main id="app">
     <div id="map" aria-label="Nike After Dark Los Angeles course map"></div>
 
     <div class="top-controls">
+    <div class="top-pair">
     <section id="stats" class="stats-card" aria-live="polite">
       <div class="info-header">
         <h1>Nike: After Dark Half Marathon Course (2026)</h1>
-        <button id="map-mode" class="mode-button" type="button" aria-label="Map mode: Location heading-up. Next: Route overview">
-          <span id="mode-label">Location ↑</span><small id="location-accuracy">—</small>
-        </button>
         <button id="help-toggle" class="info-button" type="button" aria-label="Course information" aria-expanded="false">
           <span id="help-label">More info</span><span id="help-symbol" aria-hidden="true">＋</span>
         </button>
@@ -43,7 +41,16 @@
       <div id="heading-source" class="heading-source">HEADING</div>
     </section>
     </section>
-
+    <div class="mode-card">
+        <button id="map-mode" class="mode-button" data-mode="heading" type="button" aria-label="Map mode: Location heading-up. Next: Route overview">
+          <svg id="mode-icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+            <g class="mode-route" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 7l8-3 10 3 8-3v22l-8 3-10-3-8 3zM11 4v22M21 7v22"/></g>
+            <g class="mode-location" fill="none" stroke="currentColor" stroke-width="2"><circle cx="16" cy="16" r="9"/><circle cx="16" cy="16" r="3"/><path d="M16 1v6m0 18v6M1 16h6m18 0h6"/></g>
+            <path class="mode-heading" fill="currentColor" d="M16 2L29 29 16 23 3 29z"/>
+          </svg><span id="mode-label">Location ↑</span><small id="location-accuracy">—</small>
+        </button>
+    </div>
+    </div>
 
     <aside class="facility-legend" aria-label="Course facilities">
       <label><input id="aid-visible" type="checkbox" checked> 💧 Aid 1–8 · approx.</label><span>WC · venue toilets</span>
@@ -74,7 +81,7 @@
           <li>Keep this page open while running. Add it to your Home Screen for one-tap access.</li>
           <li>The blue dot is you. Distance, remaining distance, elevation, and status sit above the bottom profile.</li>
           <li>The top navigation card combines your next course turn and live heading direction.</li>
-          <li>The heading button cycles Route overview → Location north-up → Location heading-up. Dragging the map pauses centering; tap to recenter the selected mode.</li>
+          <li>The square card cycles Route overview → Location north-up → Location heading-up. Dragging the map pauses centering; tap to recenter the selected mode.</li>
           <li>Rotate the map manually with two fingers. Manual rotation turns Direction off.</li>
           <li>Heading-up also follows the course bearing while previewing the profile. Releasing restores your previous view.</li>
         </ol>
@@ -95,6 +102,6 @@
   <script src="course-elevation.js?v=1"></script>
   <script src="heading-smoothing.js?v=1"></script>
   <script src="course-facilities.js?v=1"></script>
-  <script src="app.js?v=49"></script>
+  <script src="app.js?v=50"></script>
 </body>
 </html>

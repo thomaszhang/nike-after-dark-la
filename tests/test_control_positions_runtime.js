@@ -26,7 +26,7 @@ test('progress dot follows actual padded chart geometry at start, middle and end
 });
 
 test('course fit measures top and bottom controls instead of their former offsets', () => {
-  const fn=source.slice(source.indexOf('  function courseViewPadding()'),source.indexOf('  const updateControlGeometry'));
+  const fn=source.slice(source.indexOf('  function courseViewPadding()'),source.indexOf('  // Thomas: square is'));
   const context=vm.createContext({window:{innerHeight:844},document:{
     querySelector:selector=>({getBoundingClientRect:()=>selector === ".progress-card" ? {top:780} : {bottom:290}}),
     getElementById:()=>({getBoundingClientRect:()=>({top:780})})}});
@@ -49,12 +49,30 @@ test('taller portrait and landscape charts retain cursor/dot/distance agreement'
   }
 });
 test('isolated viewport measurements leave fit space clear of whole cards and safe insets',()=>{
-  const fn=source.slice(source.indexOf('  function courseViewPadding()'),source.indexOf('  const updateControlGeometry'));
+  const fn=source.slice(source.indexOf('  function courseViewPadding()'),source.indexOf('  // Thomas: square is'));
   // Explicit geometry fixtures, not browser measurements or physical iPhone screenshots.
   for(const [width,height,top,bottom] of [[320,568,198,416],[390,844,200,680],[844,390,162,258],[568,320,154,198]]){
     const c=vm.createContext({window:{innerHeight:height},document:{querySelector:s=>({getBoundingClientRect:()=>s==='.progress-card'?{top:bottom}:{bottom:top}})}});vm.runInContext(fn,c);
     const p=vm.runInContext('courseViewPadding()',c);
     assert.equal(p.paddingTopLeft[1],top+12);assert.equal(p.paddingBottomRight[1],height-bottom+12);
     assert.ok(height-p.paddingTopLeft[1]-p.paddingBottomRight[1]>0,`${width}x${height}`);
+  }
+});
+
+test('square shares left-card height across narrow portrait, landscape and wrapped directions',()=>{
+  const fn=source.slice(source.indexOf('  function squareSideForContent'),source.indexOf('  const updateControlGeometry'));
+  for(const width of [296,366,520,780]) for(const contentHeight of [74,115,170,300]) {
+    const values={},style={width:'',height:'',removeProperty(k){this[k]=''},setProperty(k,v){values[k]=v}};
+    const info={style,getBoundingClientRect:()=>({height:contentHeight})};
+    const pair={style,getBoundingClientRect:()=>({width})};
+    const context=vm.createContext({Math,getComputedStyle:()=>({columnGap:'8px'}),document:{querySelector:()=>pair,getElementById:()=>info}});
+    vm.runInContext(fn,context);vm.runInContext('fitTopCards()',context);
+    const side=parseFloat(values['--mode-side']);
+    assert.ok(side>=44);assert.ok(width-side-8>=44);
+    // CSS binds left height and right square side to this same measured value.
+    assert.ok(side<=(width-8)/2+1);
+    if(contentHeight<=(width-8)/2) assert.ok(side>=contentHeight);
+    else assert.equal(side,(width-8)/2); // explicit scroll fallback, not clipped data
+    assert.equal(style.width,'');assert.equal(style.height,'');
   }
 });

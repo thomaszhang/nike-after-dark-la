@@ -87,8 +87,11 @@ The rendered course uses three copies of the same screen-offset geometry: a soft
 Reconsider the material treatment if it obscures street names in outdoor use, makes the course less visible against a changed tile style, or causes text/control contrast to fail. Do not add random runtime variation: screenshots and map state should remain repeatable, and route geometry must never be changed for visual texture.
 
 Thomas's latest screenshot (Agenda981) supersedes the two-button action bar:
-use one compact Route → Location north-up → Location heading-up cycle beside the
-title. Directions share that title card. All four existing metrics belong above
+use two adjacent top cards with an 8px gap: full information/directions on the
+left and the entire square Route → Location north-up → Location heading-up
+cycling card on the right. It must match the full left card height with aligned
+top/bottom, never an inline button or three segments. Grid and aspect ratio
+preserve alignment; actual wrapped content and available width determine size. All four existing metrics belong above
 the taller scrubber in the same bottom card. Both location modes center the real
 fix; only heading-up rotates with known heading. No independent Direction button,
 new timer or ETA. Manual pan pauses following; the next press recenters the same

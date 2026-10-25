@@ -153,7 +153,33 @@
     const bottom = document.querySelector(".progress-card").getBoundingClientRect().top;
     return { paddingTopLeft: [20, top + 12], paddingBottomRight: [20, window.innerHeight - bottom + 12] };
   }
+  // Thomas: square is a separate full-height card, not a heading button.
+  function squareSideForContent(width, gap, heightAtWidth) {
+    const available = Math.max(88, width - gap);
+    const maximum = available / 2;
+    // Width and wrapped text height affect each other; scan to the first fit.
+    for (let side = 44; side <= maximum; side += 2) {
+      if (heightAtWidth(available - side) <= side) return side;
+    }
+    // Extreme wrapping: keep both cards usable, with the left content scrollable.
+    return maximum;
+  }
+
+  function fitTopCards() {
+    const pair = document.querySelector(".top-pair"), info = document.getElementById("stats");
+    const width = pair.getBoundingClientRect().width;
+    const gap = parseFloat(getComputedStyle(pair).columnGap) || 0;
+    const side = squareSideForContent(width, gap, leftWidth => {
+      info.style.width = `${leftWidth}px`;
+      info.style.height = "auto";
+      return info.getBoundingClientRect().height;
+    });
+    info.style.removeProperty("width");
+    info.style.removeProperty("height");
+    pair.style.setProperty("--mode-side", `${side}px`);
+  }
   const updateControlGeometry = () => {
+    fitTopCards();
     const bottom = document.querySelector(".progress-card").getBoundingClientRect().top;
     document.documentElement.style.setProperty("--progress-top", `${bottom - 8}px`);
     document.documentElement.style.setProperty("--top-controls-bottom", `${document.querySelector(".top-controls").getBoundingClientRect().bottom + 7}px`);
@@ -162,6 +188,9 @@
   const controlsObserver = new ResizeObserver(updateControlGeometry);
   controlsObserver.observe(document.querySelector(".top-controls"));
   controlsObserver.observe(document.querySelector(".progress-card"));
+  const directionObserver = new MutationObserver(updateControlGeometry);
+  directionObserver.observe(document.getElementById("direction"), { subtree:true, childList:true, characterData:true, attributes:true, attributeFilter:["hidden"] });
+  document.fonts?.ready.then(updateControlGeometry);
   map.fitBounds(routeBounds, courseViewPadding());
 
   function offsetRoutePoint(point, bearing, pixels = routePassOffsetPixels) {
@@ -288,7 +317,7 @@
   syncMapRotationOrigin();
 
   const elementIds = [
-    "map-mode", "mode-label", "course-status", "distance", "remaining", "live-elevation", "location-accuracy",
+    "map-mode", "mode-label", "mode-icon", "course-status", "distance", "remaining", "live-elevation", "location-accuracy",
     "direction", "turn-arrow", "direction-label", "direction-detail", "heading-source", "location-error", "help",
     "help-toggle", "help-body", "elevation-profile", "elevation-chart", "elevation-area", "elevation-line",
     "elevation-cursor", "elevation-progress",
@@ -794,6 +823,7 @@
     const accuracy = liveSummary ? ` Accuracy ±${Math.round(feet(liveSummary.accuracy))} feet.` : "";
     els["mode-label"].textContent = labels[mode] + (paused ? " · paused" : mode === "heading" && !Number.isFinite(deviceHeading) ? " …" : "");
     els["map-mode"].dataset.mode = mode;
+    els["map-mode"].dataset.paused = String(paused);
     els["map-mode"].setAttribute("aria-label", `Map mode: ${names[mode]}${available}${heading}.${accuracy} ${paused ? "Press to recenter this mode" : `Next: ${names[next[mode]]}`}`);
   }
   function setFullRouteMode(enabled) {

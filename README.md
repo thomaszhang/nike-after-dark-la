@@ -34,7 +34,18 @@ insets remain. Course-fit padding measures the whole bottom card, not only its
 graph, and remeasures when controls resize. The same field-guide styling, aid
 layer checkbox, eight approximate pins, venue WC and official links remain.
 
-One heading button replaces both Route/Location buttons and their independent
+Thomas’s later precise correction replaces the inline heading button with TWO
+adjacent cards separated by an 8px gap. The left card contains the full route
+title and directions. The right card is the entire clickable square, aligned
+with the left card’s top and bottom; it is not a three-segment control. CSS Grid
+keeps the two cards adjacent and `aspect-ratio:1` preserves the square. A small
+content measurement selects a shared side length from available width and actual
+wrapped information height, updated for direction changes, fonts and viewport
+changes. Extreme wrapping keeps all left content scrollable rather than hiding
+it or overlapping the map/control. No fixed phone-specific widths. This latest
+correction is linked on Agenda981 and supersedes its original inline suggestion.
+
+The square mode card replaces both Route/Location buttons and their independent
 Direction settings. Its cycle is Route overview → Location north-up → Location
 heading-up → Route. Existing startup preference remains Location heading-up.
 Both location modes center the actual fix, not the old 70m lookahead; heading-up
@@ -103,7 +114,7 @@ Controls:
 - **Route** fits the complete course into the space between the top and bottom cards.
 - **Location N** centers the current fix north-up.
 - **Location ↑** centers the same fix and orients the map using real heading.
-- The one button cycles these modes. Dragging pauses following; press to recenter.
+- The entire square card cycles these modes. Dragging pauses following; press to recenter.
 - Rotate manually with two fingers to turn heading-up off while preserving the chosen bearing.
 - The course profile previews distance, remaining distance and elevation; release restores live values and the saved view.
 - **More info** (the existing plus button) opens usage notes and the official race links.
