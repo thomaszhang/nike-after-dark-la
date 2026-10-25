@@ -10,9 +10,9 @@ SW = (ROOT / "sw.js").read_text(encoding="utf-8")
 
 def test_heading_smoother_loads_before_app_and_is_cached():
     assert '<meta name="mobile-web-app-capable" content="yes">' in HTML
-    assert HTML.index('heading-smoothing.js?v=1') < HTML.index('app.js?v=48')
-    assert 'styles.css?v=30' in HTML
-    for asset in ('styles.css?v=30', 'leaflet.css?v=1.9.4', 'leaflet.js?v=1.9.4', 'route-data.js?v=2', 'course-elevation.js?v=1', 'heading-smoothing.js?v=1', 'app.js?v=48'):
+    assert HTML.index('heading-smoothing.js?v=1') < HTML.index('app.js?v=49')
+    assert 'styles.css?v=31' in HTML
+    for asset in ('styles.css?v=31', 'leaflet.css?v=1.9.4', 'leaflet.js?v=1.9.4', 'route-data.js?v=2', 'course-elevation.js?v=1', 'heading-smoothing.js?v=1', 'app.js?v=49'):
         assert f'"{asset}"' in SW
     assert re.search(r'\b\w+\.request\.mode\s*===\s*"navigate"', SW)
     assert '"heading-smoothing.js"' not in SW
@@ -41,27 +41,25 @@ def test_tracking_starts_automatically_without_manual_button():
     assert re.search(r"\bstartTracking\(\);\s*(?:\n|if \(\"serviceWorker)", JS)
 
 
-def test_heading_starts_enabled_and_is_integrated_into_both_primary_controls():
+def test_heading_starts_enabled_with_one_three_state_control():
     assert 'id="direction-toggle"' not in HTML
-    assert HTML.count('direction-substate') == 2
-    assert HTML.count('class="direction-state"') == 2
+    assert 'direction-substate' not in HTML
     assert re.search(r"let locationDirectionMode = true\b", JS)
-    assert re.search(r"let routeDirectionMode = false\b", JS)
-    assert "toggleNavigation" in JS
-    assert "function updateControlAccessibility()" in JS
-    assert "Press again to turn Route Direction" in JS
-    assert "Press again to turn Location Direction" in JS
+    assert re.search(r"let routeDirectionMode = true\b", JS)
+    assert 'id="map-mode"' in HTML
+    assert 'function updateControlAccessibility()' in JS
+    assert 'Heading unavailable' in JS
     assert 'Accuracy ±${Math.round(feet(liveSummary.accuracy))} feet' in JS
-    assert 'setAttribute("aria-label", `Center map on my location. Accuracy' not in JS
+
 
 
 def test_navigation_is_one_bottom_interface():
     assert 'id="guidance"' not in HTML
-    assert HTML.count('aria-live="polite"') == 2
+    assert HTML.count('aria-live="polite"') == 3
     assert HTML.count('aria-live="assertive"') == 0
     assert 'class="navigation-card" aria-live="polite" aria-atomic="true"' in HTML
     assert CSS.count(".navigation-card {") >= 1
-    assert ".top-controls .navigation-card" in CSS
+    assert ".stats-card .navigation-card" in CSS
     assert "renderGuidance" not in JS
     assert "target.paused" in JS
     assert "els.direction.hidden = Boolean(target && target.paused)" in JS
@@ -85,22 +83,15 @@ def test_course_information_uses_requested_title_and_four_columns():
     assert "progress follows nearest point on course" not in JS
 
 
-def test_bottom_bar_has_two_primary_controls_with_direction_substates():
-    assert 'class="actions-card" aria-label="Map controls"' in HTML
-    assert HTML.count('class="control-button') == 2
-    assert re.search(r'id="route-control"[^>]*>[\s\S]*<span class="control-label">Route</span>[\s\S]*class="direction-substate"', HTML)
-    assert re.search(r'id="center-control"[^>]*aria-pressed="true"[^>]*>[\s\S]*<span class="control-label">Location[\s\S]*id="location-accuracy"', HTML)
-    assert re.search(r"\.control-detail\s*\{[^}]*color:var\(--muted\)[^}]*font-size:", CSS, re.DOTALL)
-    assert 'id="direction-toggle"' not in HTML
-    assert 'id="recenter"' not in HTML
-    assert "recenter-button" not in CSS
-    assert "grid-template-columns:repeat(2,1fr)" in CSS
-    assert re.search(r"\.control-button\.active\s+\.enabled-dot\s*\{[^}]*background:var\(--enabled\)", CSS, re.DOTALL)
-    assert re.search(r"\.direction-substate\.active\s+\.direction-dot\s*\{[^}]*background:var\(--enabled\)", CSS, re.DOTALL)
-    assert 'id="navigate"' not in HTML
-    assert 'id="overview"' not in HTML
-    assert "Heading on" not in HTML
-    assert "Full route" not in HTML
+def test_heading_has_one_mode_cycle_without_old_direction_controls():
+    assert HTML.count('id="map-mode"') == 1
+    for old in ['route-control', 'center-control', 'route-direction', 'location-direction']:
+        assert f'id="{old}"' not in HTML
+    assert 'class="actions-card"' not in HTML
+    assert 'class="mode-button"' in HTML
+    assert 'id="location-accuracy"' in HTML
+    assert 'cycleMapMode' in JS
+
 
 
 def test_heading_does_not_rotate_leaflet_input_container():
@@ -122,20 +113,16 @@ def test_rotated_map_requests_tiles_for_the_full_viewport_diagonal():
     assert "keepBuffer: 4" in JS
 
 
-def test_primary_controls_select_once_then_toggle_their_direction_preference():
-    location_handler = JS[JS.index("async function activateLocationControl"):JS.index("function showFullRoute")]
-    route_handler = JS[JS.index("async function activateRouteControl"):JS.index('map.on("dragstart"')]
-    assert "if (following && !fullRouteMode)" in location_handler
-    assert 'await toggleNavigation("location")' in location_handler
-    assert "centerLiveMap()" in location_handler
-    assert "if (fullRouteMode)" in route_handler
-    assert 'await toggleNavigation("route")' in route_handler
-    assert "showFullRoute()" in route_handler
-    assert "disableDirection" not in route_handler
-    toggle = JS[JS.index("async function toggleNavigation"):JS.index("function centerLiveMap")]
-    assert "setFullRouteMode(false)" not in toggle
-    assert "following = true" not in toggle
-    assert "routeDirectionMode" in toggle and "locationDirectionMode" in toggle
+def test_mode_cycle_and_manual_recenter_preserve_permission_flow():
+    handler = JS[JS.index("async function cycleMapMode"):JS.index('map.on("dragstart"')]
+    assert "if (!following && !fullRouteMode)" in handler
+    assert 'await toggleNavigation("location")' in handler
+    assert "centerLiveMap()" in handler
+    assert "if (fullRouteMode)" in handler
+    assert "showFullRoute()" in handler
+    assert 'DeviceOrientationEvent.requestPermission()' in JS
+    assert 'Compass denied · using GPS heading while running' in JS
+
 
 
 def test_live_location_marker_shows_heading_whenever_known():
@@ -203,7 +190,7 @@ def test_switching_primary_view_preserves_direction_and_two_pointer_rotation_is_
 
 def test_off_course_transition_defaults_to_route_and_route_press_always_fits_course():
     position = JS[JS.index("function updatePosition"):JS.index("function locationError")]
-    route_view = JS[JS.index("function showFullRoute"):JS.index("async function activateRouteControl")]
+    route_view = JS[JS.index("function showFullRoute"):JS.index("  let modeChangePending")]
     assert 'const enteredOffCourse = courseStatus === "Off course" && liveSummary?.status !== "Off course"' in position
     assert 'if (previewDistance !== null) pendingOffCourseRoute = courseStatus === "Off course"' in position
     assert "else if (enteredOffCourse) showFullRoute()" in position

@@ -20,35 +20,40 @@ This is a static progressive web app: there is no application server, account, o
 - Can be installed on an iPhone Home Screen.
 - Caches the application shell and route data for offline startup.
 
-## Control positions — Thomas, October 24, 2026
+## Latest compact cards and three-mode button — Thomas, October 24, 2026
 
-Thomas requested the existing scrubber at the bottom and directions/buttons at
-the top (Management request 125533bc7cbee8c78d93, Agenda980). The same slider DOM,
-pointer capture, keyboard preview, release restoration and Route/Location buttons
-are retained. No duplicate controls, helper panel or GPS permission change.
+Thomas's latest screenshot supersedes Agenda980's separate directions/actions
+layout. Agenda981 owns one title/directions card at the top and the four existing
+metrics in one bottom card directly above the elevation scrubber. No app elapsed
+time or ETA exists; the phone timer in the screenshot is not an app metric.
 
-The top cards use natural flow, so hidden off-course directions do not leave an
-empty fixed slot. Short landscape screens put the same cards in two columns;
-safe-area left/right insets protect notches. The same profile sits above the
-bottom safe inset with a 52px touch area. Its progress dot is positioned relative
-to the actual chart within that padding. Course-fit padding measures the current
-controls instead of using their old positions. Very short screens allow the top
-group to scroll rather than collide with the bottom profile. This is layout, not
-a change to matching, safety thresholds, permission prompts or facility facts.
+The graph grows from 31px to 54px, with a 66px drag region (46px/58px in short
+landscape). It remains the same slider, pointer capture and keyboard preview,
+with release restoring the saved controls and view. Safe-area bottom and side
+insets remain. Course-fit padding measures the whole bottom card, not only its
+graph, and remeasures when controls resize. The same field-guide styling, aid
+layer checkbox, eight approximate pins, venue WC and official links remain.
 
-Checks for this layout: existing and added tests exercise the real dot-position
-and course-padding functions, unique slider/button placement, pointer capture and
-restore handlers, safe-area rules, landscape columns and cache versions. These
-are fixtures/source checks, not screenshots or physical-iPhone acceptance.
+One heading button replaces both Route/Location buttons and their independent
+Direction settings. Its cycle is Route overview → Location north-up → Location
+heading-up → Route. Existing startup preference remains Location heading-up.
+Both location modes center the actual fix, not the old 70m lookahead; heading-up
+rotates only with real compass or GPS-motion heading. Selecting heading-up may
+request the existing motion permission in the click gesture; denial retains GPS
+heading fallback. No location/heading is manufactured. Accuracy stays on the
+button and in its accessible name; missing heading is stated in that name.
+Manual pan pauses following and labels the mode paused. The next press recenters
+the same mode; later presses cycle. A pan during a pending permission request
+must not be overridden. Heading preference also applies during scrub preview,
+without an independent direction toggle. Route overview remains north-up.
 
-Native acceptance is blocked by the existing exact Safari window 2895 and its
-pending location sheet. Engineer's read-only diagnosis confirmed it still exists
-after the one close receipt; no close replay, permission answer, navigation,
-new-window or alternate-browser workaround is authorized by that diagnosis.
-Agenda980 retains final narrow/landscape Safari visual and interaction checks;
-Agenda979 retains its facility-specific checks. Resolve the exact window/prompt
-with Thomas before the next supported browser check. Source deployment and HTTP
-readback are independent and should not be left merely prepared.
+Native screenshot acceptance remains blocked by historical exact Safari2895 and
+its location sheet. Do not dismiss, close again, adopt, navigate, open another
+window or launch an alternate browser to bypass it. Agenda979/980 retain their
+original history; Agenda981 owns the latest layout's pending actual portrait,
+landscape, touch and physical-iPhone acceptance. Fixtures and HTTP checks are not
+those visual checks. Engineer's read-only diagnosis is saved under
+`~/Library/Application Support/Nike facilities979/diagnosis/RESULT.md`.
 
 ## Navigation behavior
 
@@ -58,9 +63,9 @@ The top navigation card changes with distance from the route:
 | --- | --- |
 | 0–30 m | Normal course and turn guidance |
 | More than 30 m through 100 m | Direction and distance back to the nearest course point |
-| More than 100 m (about 328 ft) | Navigation card hidden; top status reports off course while Distance, Remaining, and Elevation show `—` |
+| More than 100 m (about 328 ft) | Navigation card hidden; bottom status reports off course while Distance, Remaining, and Elevation show `—` |
 
-The card returns automatically after the location is again within 100 m of the course. Route and Location, including each view's Direction setting, remain available while the card is hidden.
+The card returns automatically after the location is again within 100 m of the course. The three-mode button remains available while the direction content is hidden.
 
 These cues are a convenience, not authoritative race-day directions. Follow event staff, signs, closures, and official course updates.
 
@@ -89,19 +94,19 @@ python3 -m http.server 8765 --bind 127.0.0.1
 
 1. Open the HTTPS deployment in Safari.
 2. Allow precise location when prompted.
-3. Press the selected **Location** button again if you need to enable Direction and Safari asks separately for motion/orientation access.
+3. Cycle to **Location ↑** if you need heading-up and Safari asks separately for motion/orientation access.
 4. Optionally choose **Share → Add to Home Screen**.
 5. Keep the page visible during the run. iOS may pause browser location updates after the screen locks, even though the app requests a screen wake lock where supported.
 
 Controls:
 
-- **Route** fits and centers the complete course. Press selected Route again to toggle its remembered Direction setting; that setting rotates the map to the course bearing only while scrubbing the elevation profile.
-- **Location** returns the map to the current location after Route or manual dragging. Press selected Location again to toggle its remembered heading-up Direction setting; GPS accuracy remains beside the label.
-- Route and Location are mutually exclusive. Dragging the map leaves both unselected without changing either Direction setting.
-- Location Direction starts on; Route Direction starts off. Switching views preserves both settings.
-- Rotate the map manually with two fingers. Manual rotation turns Direction off for the current view and preserves the chosen bearing.
-- Green dots show the selected view and each view's Direction state.
-- **More info** opens the in-app usage notes and official race link.
+- **Route** fits the complete course into the space between the top and bottom cards.
+- **Location N** centers the current fix north-up.
+- **Location ↑** centers the same fix and orients the map using real heading.
+- The one button cycles these modes. Dragging pauses following; press to recenter.
+- Rotate manually with two fingers to turn heading-up off while preserving the chosen bearing.
+- The course profile previews distance, remaining distance and elevation; release restores live values and the saved view.
+- **More info** (the existing plus button) opens usage notes and the official race links.
 
 ## Privacy and network use
 

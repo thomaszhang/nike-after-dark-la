@@ -28,21 +28,24 @@ class Parents(HTMLParser):
 def test_one_existing_slider_outside_top_group_and_existing_buttons_inside():
     parser = Parents()
     parser.feed(HTML)
-    for identity in ['direction', 'stats', 'route-control', 'center-control', 'aid-visible']:
+    for identity in ['direction', 'stats', 'map-mode', 'aid-visible']:
         assert 'top-controls' in parser.parents[identity]
         assert parser.counts[identity] == 1
     assert 'top-controls' not in parser.parents['elevation-profile']
     assert parser.counts['elevation-profile'] == 1
+    for identity in ['distance', 'remaining', 'live-elevation', 'course-status', 'elevation-profile']:
+        assert 'progress-card' in parser.parents[identity]
+    assert 'stats' in parser.parents['direction']
     assert 'role="slider" tabindex="0"' in HTML
 
 def test_safe_area_touch_and_short_landscape_layout():
-    assert 'height:52px; min-height:44px' in CSS
+    assert 'height:66px; min-height:44px' in CSS
     assert 'bottom:var(--safe-bottom)' in CSS
     assert 'env(safe-area-inset-left)' in CSS
     assert 'env(safe-area-inset-right)' in CSS
     assert '@media (min-width:480px) and (max-height:500px)' in CSS
-    assert '.top-controls .navigation-card { grid-column:2; grid-row:1; }' in CSS
-    assert '.top-controls .actions-card { grid-column:2; grid-row:2; }' in CSS
+    assert '.stats-card .navigation-card' in CSS
+    assert 'grid-template-columns:minmax(0,1fr) auto' in CSS
     assert 'overflow-y:auto' in CSS
     assert 'courseViewPadding()' in JS
     assert 'paddingTopLeft: [20, 190]' not in JS

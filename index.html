@@ -15,7 +15,7 @@
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icon-180.png">
   <link rel="stylesheet" href="leaflet.css?v=1.9.4">
-  <link rel="stylesheet" href="styles.css?v=30">
+  <link rel="stylesheet" href="styles.css?v=31">
 </head>
 <body>
   <main id="app">
@@ -25,16 +25,14 @@
     <section id="stats" class="stats-card" aria-live="polite">
       <div class="info-header">
         <h1>Nike: After Dark Half Marathon Course (2026)</h1>
-        <button id="help-toggle" class="info-button" type="button" aria-expanded="false">
+        <button id="map-mode" class="mode-button" type="button" aria-label="Map mode: Location heading-up. Next: Route overview">
+          <span id="mode-label">Location ↑</span><small id="location-accuracy">—</small>
+        </button>
+        <button id="help-toggle" class="info-button" type="button" aria-label="Course information" aria-expanded="false">
           <span id="help-label">More info</span><span id="help-symbol" aria-hidden="true">＋</span>
         </button>
       </div>
-      <div class="stat"><span class="stat-label">DISTANCE</span><strong id="distance">—</strong></div>
-      <div class="stat"><span class="stat-label">REMAINING</span><strong id="remaining">—</strong></div>
-      <div class="stat"><span class="stat-label">ELEVATION</span><strong id="live-elevation">—</strong></div>
-      <div class="stat"><span class="stat-label">STATUS</span><strong id="course-status">Locating</strong></div>
 
-    </section>
 
     <section id="direction" class="navigation-card" aria-live="polite" aria-atomic="true">
       <div id="turn-arrow" class="turn-arrow" aria-hidden="true">↑</div>
@@ -44,29 +42,19 @@
       </div>
       <div id="heading-source" class="heading-source">HEADING</div>
     </section>
-
-    <section class="actions-card" aria-label="Map controls">
-      <button id="route-control" class="control-button" type="button" aria-pressed="false" aria-label="Center map on route">
-        <span class="enabled-dot" aria-hidden="true"></span>
-        <span class="control-copy">
-          <span class="control-label">Route</span>
-          <span id="route-direction" class="direction-substate"><span class="direction-dot" aria-hidden="true"></span><span class="direction-state">Direction off</span></span>
-        </span>
-      </button>
-      <button id="center-control" class="control-button active" type="button" aria-pressed="true" aria-label="Center map on my location">
-        <span class="enabled-dot" aria-hidden="true"></span>
-        <span class="control-copy">
-          <span class="control-label">Location <small id="location-accuracy" class="control-detail">—</small></span>
-          <span id="location-direction" class="direction-substate active"><span class="direction-dot" aria-hidden="true"></span><span class="direction-state">Direction on</span></span>
-        </span>
-      </button>
     </section>
+
 
     <aside class="facility-legend" aria-label="Course facilities">
       <label><input id="aid-visible" type="checkbox" checked> 💧 Aid 1–8 · approx.</label><span>WC · venue toilets</span>
     </aside>
     </div>
 
+    <section class="progress-card" aria-label="Course progress" aria-live="polite">
+      <div class="stat"><span class="stat-label">DISTANCE</span><strong id="distance">—</strong></div>
+      <div class="stat"><span class="stat-label">REMAINING</span><strong id="remaining">—</strong></div>
+      <div class="stat"><span class="stat-label">ELEVATION</span><strong id="live-elevation">—</strong></div>
+      <div class="stat"><span class="stat-label">STATUS</span><strong id="course-status">Locating</strong></div>
       <div id="elevation-profile" class="elevation-profile" role="slider" tabindex="0" aria-orientation="horizontal" aria-label="Course elevation profile. Slide to preview the course." aria-valuemin="0" aria-valuemax="13.3" aria-valuenow="0" aria-valuetext="Start · 26 feet elevation">
         <svg id="elevation-chart" viewBox="0 0 220 30" preserveAspectRatio="none" aria-hidden="true">
           <path id="elevation-area" class="elevation-area"></path>
@@ -76,17 +64,19 @@
         <span id="elevation-progress" class="elevation-progress" hidden></span>
       </div>
 
+    </section>
+
     <section id="help" class="help-card" hidden>
       <div id="help-body">
         <strong class="help-heading">Before your run</strong>
         <ol>
           <li>Live tracking starts automatically. Allow precise location when Safari asks.</li>
           <li>Keep this page open while running. Add it to your Home Screen for one-tap access.</li>
-          <li>The blue dot is you. Distance, remaining distance, elevation, and status stay at the top.</li>
+          <li>The blue dot is you. Distance, remaining distance, elevation, and status sit above the bottom profile.</li>
           <li>The top navigation card combines your next course turn and live heading direction.</li>
-          <li>Tap <b>Route</b> or <b>Location</b> once to select that view. Tap the selected view again to toggle its Direction sub-button. Dragging the map leaves both views unselected.</li>
+          <li>The heading button cycles Route overview → Location north-up → Location heading-up. Dragging the map pauses centering; tap to recenter the selected mode.</li>
           <li>Rotate the map manually with two fingers. Manual rotation turns Direction off.</li>
-          <li>Route Direction applies while sliding across the elevation profile. Location Direction rotates the live map to your heading. Releasing the profile restores your previous view.</li>
+          <li>Heading-up also follows the course bearing while previewing the profile. Releasing restores your previous view.</li>
         </ol>
         <p>iPhone may pause browser location after the screen locks. This page requests that the screen stay awake when supported.</p>
         <p><b>Course facilities · 2026</b><br>💧 Numbered aid pins: water at all eight; tap for SIS electrolyte/gel details. Pins approximate Nike’s published mileages, not exact table positions. WC on Start/Finish means toilets in that venue area, not at the pin itself.</p>
@@ -105,6 +95,6 @@
   <script src="course-elevation.js?v=1"></script>
   <script src="heading-smoothing.js?v=1"></script>
   <script src="course-facilities.js?v=1"></script>
-  <script src="app.js?v=48"></script>
+  <script src="app.js?v=49"></script>
 </body>
 </html>

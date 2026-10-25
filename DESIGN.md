@@ -86,7 +86,13 @@ The rendered course uses three copies of the same screen-offset geometry: a soft
 
 Reconsider the material treatment if it obscures street names in outdoor use, makes the course less visible against a changed tile style, or causes text/control contrast to fail. Do not add random runtime variation: screenshots and map state should remain repeatable, and route geometry must never be changed for visual texture.
 
-The top action bar has two mutually exclusive primary views: Route, Location, or neither after manual dragging. Selecting Route resets north-up and fits the complete course; selecting Location returns to the live fix. Pressing the already-selected view toggles its own remembered Direction preference. Location Direction starts on and provides heading-up following with the center led approximately 70 m ahead. Route Direction starts off and only rotates an active profile preview to its selected course bearing; the persistent fitted Route view remains north-up. Switching primary views does not alter either preference. When status transitions to Off course, Route is selected and fitted without changing either Direction preference. A later manual Location selection remains respected until status recovers and becomes Off course again.
+Thomas's latest screenshot (Agenda981) supersedes the two-button action bar:
+use one compact Route → Location north-up → Location heading-up cycle beside the
+title. Directions share that title card. All four existing metrics belong above
+the taller scrubber in the same bottom card. Both location modes center the real
+fix; only heading-up rotates with known heading. No independent Direction button,
+new timer or ETA. Manual pan pauses following; the next press recenters the same
+mode. Existing sources, route geometry, profile restoration and GPS privacy remain.
 
 The official coordinates remain unchanged for matching, mileage, and elevation. Rendering shifts each pass 5 screen pixels to the right of its travel direction. Opposing out-and-back passes therefore appear as parallel 4 px Nike-red tracks about 10 pixels apart instead of one collapsed line. Repeated white chevrons use the same shifted pass coordinates; opposite bearings are retained rather than filtering one direction out. Mile labels are regenerated from exact one-mile course distances and shifted through the same directional-pass function, rather than rendering the original unshifted GPX marker coordinates. Pass geometry, chevrons, and mile labels are recalculated after zoom or movement so screen-space separation remains consistent.
 
