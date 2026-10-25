@@ -85,6 +85,52 @@ After one successful online load, the service worker caches HTML, CSS, JavaScrip
 
 OpenStreetMap tiles are hosted separately. Previously viewed tiles may remain in the browser cache, but uncached areas need network access and can appear blank offline. Course geometry, progress calculations, navigation, and GPS processing do not depend on a remote API.
 
+## Verified facilities · October 24, 2026
+
+The published app is <https://thomaszhang.github.io/nike-after-dark-la/>.
+The repository was renamed from `nike-after-dark-la-live-route`; do not publish
+or link the old 404 Pages URL. Deployment is a push to this repository's `main`
+branch, followed by verification of the actual Pages files (not just Git source).
+
+Nike's [2026 race page](https://www.afterdarktour.nike.com/en/la) links the
+[2026 Race Weekend Guide](https://cdn.sanity.io/files/1g4896rs/production/57e8d2e23eef11998a65a1a5523c516ea918a44d.pdf#page=2).
+Its page 2, **On course fueling**, lists:
+
+| Aid | Mile | Supplies |
+| --- | --- | --- |
+| 1 | 1.7 | Water |
+| 2 | 2.9 | Water, SIS electrolyte |
+| 3 | 4.2 | Water |
+| 4 | 5.6 | Water, SIS electrolyte |
+| 5 | 7.1 | Water, SIS gel |
+| 6 | 8.6 | Water, SIS electrolyte |
+| 7 | 9.9 | Water |
+| 8 | 11.9 | Water, SIS electrolyte |
+
+These are **official mileages, not official coordinates**. Each pin is
+interpolated at that mileage on the unchanged 834-point official course line.
+The line measures about 13.32 miles rather than the advertised 13.1, so pins are
+approximate; do not rescale or claim exact table positions/street sides. Each
+pin says this and links the guide. One compact legend toggles the aid layer.
+
+Nike says restrooms are on course “roughly every mile” but supplies no individual
+locations in that section. No every-mile toilet pins are generated, and no aid
+station is assumed to have toilets. The race FAQ confirms toilets at the start,
+before/inside the venue, and for the finish/festival; it also confirms water
+collected after finishing. These **area-level** facts share the existing Start
+and Finish pins with a WC label and explicit details that the pin is not an
+exact toilet/water location. This avoids inventing co-location.
+
+Checked October 24, 2026: guide fueling crop visually read against all eight
+rows; the live race JSON course equals the app's geometry. Nike's linked Atlist
+maps list businesses, cheer zones and start/finish, not individual aid/toilet
+coordinates. The interactive route JSON has only two start/finish markers;
+no facility legend was substituted from another year. Follow race staff/signs.
+
+`course-facilities.js` stores the small source-annotated dataset locally, loaded
+before `app.js` and cached in the versioned offline shell. No new service, runner
+data, external API request or location upload is added.
+
 ## Course data
 
 ### Visual treatment

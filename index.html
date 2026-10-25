@@ -15,7 +15,7 @@
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icon-180.png">
   <link rel="stylesheet" href="leaflet.css?v=1.9.4">
-  <link rel="stylesheet" href="styles.css?v=27">
+  <link rel="stylesheet" href="styles.css?v=28">
 </head>
 <body>
   <main id="app">
@@ -81,18 +81,24 @@
           <li>Route Direction applies while sliding across the elevation profile. Location Direction rotates the live map to your heading. Releasing the profile restores your previous view.</li>
         </ol>
         <p>iPhone may pause browser location after the screen locks. This page requests that the screen stay awake when supported.</p>
+        <p><b>Course facilities · 2026</b><br>💧 Numbered aid pins: water at all eight; tap for SIS electrolyte/gel details. Pins approximate Nike’s published mileages, not exact table positions. WC on Start/Finish means toilets in that venue area, not at the pin itself.</p>
+        <p>Nike says restrooms are on course roughly every mile, but does not give individual locations. No unconfirmed restroom pins are plotted. <a href="https://cdn.sanity.io/files/1g4896rs/production/57e8d2e23eef11998a65a1a5523c516ea918a44d.pdf#page=2" target="_blank" rel="noopener">2026 participant guide · On course fueling ↗</a></p>
         <p>Elevation: Copernicus DEM GLO-90 via <a href="https://open-meteo.com/en/docs/elevation-api" target="_blank" rel="noopener">Open-Meteo ↗</a>.</p>
         <p>Map data: <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors ↗</a>.</p>
         <p><a href="https://www.afterdarktour.nike.com/en/la" target="_blank" rel="noopener">Official Nike race page ↗</a></p>
       </div>
     </section>
 
+    <aside class="facility-legend" aria-label="Course facilities">
+      <label><input id="aid-visible" type="checkbox" checked> 💧 Aid 1–8 · approx.</label><span>WC · venue toilets</span>
+    </aside>
     <div id="location-error" class="error-card" hidden></div>
   </main>
   <script src="leaflet.js?v=1.9.4"></script>
   <script src="route-data.js?v=2"></script>
   <script src="course-elevation.js?v=1"></script>
   <script src="heading-smoothing.js?v=1"></script>
-  <script src="app.js?v=46"></script>
+  <script src="course-facilities.js?v=1"></script>
+  <script src="app.js?v=47"></script>
 </body>
 </html>

@@ -233,8 +233,30 @@
   map.on("zoomend moveend", refreshRoutePresentation);
   refreshRoutePresentation();
 
-  L.marker([route.start[1], route.start[0]], { icon: label("START", "start-finish", -1.2), zIndexOffset: 500 }).addTo(map).bindPopup("Start · King Harbor");
-  L.marker([route.finish[1], route.finish[0]], { icon: label("FINISH", "start-finish", 1.2), zIndexOffset: 500 }).addTo(map).bindPopup("Finish · King Harbor");
+  const facilities = window.NIKE_FACILITIES;
+  const facilityLayer = L.layerGroup().addTo(map);
+  const facilityMarkers = [];
+  // Official mileages locate an approximate course area, not surveyed tables.
+  for (const station of facilities.stations) {
+    const point = pointAtCourse(station.mile * 1609.344);
+    const marker = L.marker([point.lat, point.lon], {
+      icon: L.divIcon({ className: "facility-marker", iconSize: [44, 44], iconAnchor: [22, 22],
+        html: `<span class="facility-badge">💧<small>${station.number}</small></span>` }),
+      title: `Aid ${station.number} · mile ${station.mile} · ${station.supplies.join(" + ")} · approximate`,
+      alt: `Aid ${station.number}, mile ${station.mile}`, zIndexOffset: 600,
+    }).addTo(facilityLayer).bindPopup(
+      `<strong>Aid ${station.number} · mile ${station.mile}</strong><p>${station.supplies.join(" · ")}</p><p>${facilities.positioning}</p><p>Restroom at this stop: not confirmed.</p><a href="${facilities.guide}" target="_blank" rel="noopener">Nike 2026 guide · On course fueling ↗</a>`,
+      { className: "facility-popup", maxWidth: 270, autoPanPaddingTopLeft: [16, 150], autoPanPaddingBottomRight: [16, 170] });
+    facilityMarkers.push(marker);
+  }
+  // Combine area-level toilet facts with existing start/finish pins, not invented toilet coordinates.
+  L.marker([route.start[1], route.start[0]], { icon: label("START · WC", "start-finish", -1.2), zIndexOffset: 700 }).addTo(map).bindPopup(
+    `Start · King Harbor<p>Restrooms in the start/venue area. Nike confirms toilets at the start and banks before/inside the venue; this pin is the start line, not an exact toilet location.</p><a href="${facilities.race}" target="_blank" rel="noopener">Nike 2026 race FAQ ↗</a>`, { className: "facility-popup" });
+  L.marker([route.finish[1], route.finish[0]], { icon: label("FINISH · WC", "start-finish", 1.2), zIndexOffset: 700 }).addTo(map).bindPopup(
+    `Finish · King Harbor<p>Post-finish water and restrooms in the finish/festival area. This pin is the finish line, not an exact water table or toilet location.</p><a href="${facilities.race}" target="_blank" rel="noopener">Nike 2026 race FAQ ↗</a>`, { className: "facility-popup" });
+  document.getElementById("aid-visible").addEventListener("change", event => {
+    if (event.target.checked) facilityLayer.addTo(map); else map.removeLayer(facilityLayer);
+  });
   const headingPane = document.createElement("div");
   headingPane.className = "leaflet-heading-pane";
   const mapPane = map.getPane("mapPane");

@@ -1,11 +1,12 @@
 "use strict";
 
-const CACHE = "nike-la-route-v50";
+const CACHE = "nike-la-route-v51";
 const SHELL = [
   "./",
   "index.html",
-  "styles.css?v=27",
-  "app.js?v=46",
+  "styles.css?v=28",
+  "app.js?v=47",
+  "course-facilities.js?v=1",
   "course-elevation.js?v=1",
   "heading-smoothing.js?v=1",
   "route-data.js?v=2",

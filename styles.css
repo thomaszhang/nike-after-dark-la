@@ -52,6 +52,22 @@ body.dark-appearance .leaflet-tile-pane { filter:invert(.93) hue-rotate(180deg) 
 .leaflet-tile-container { will-change:transform; }
 .leaflet-overlay-pane svg { overflow:visible; }
 .leaflet-control-zoom { display:none; }
+
+/* Facility pins use the existing field-guide palette; 44px hit areas, compact ink. */
+.facility-marker { background:transparent; border:0; }
+.facility-badge { display:flex; align-items:center; justify-content:center; gap:1px; width:31px; height:27px; margin:8px 0 0 12px; border:2px solid var(--paper); border-radius:8px 10px 7px 11px; background:#18566b; color:#fff8e9; box-shadow:0 0 0 1px #163d47,1px 2px 5px #0005; font-size:13px; rotate:var(--map-heading,0deg); }
+.facility-badge small { font:800 11px/1 -apple-system,BlinkMacSystemFont,sans-serif; }
+.facility-marker:focus-visible { outline:2px solid var(--blue); outline-offset:1px; border-radius:10px; }
+.facility-legend { position:fixed; z-index:800; left:12px; top:calc(var(--safe-top) + 132px); display:flex; gap:12px; align-items:center; padding:0 9px; min-height:44px; border:1px solid var(--border); border-radius:9px 12px 8px 11px; background:var(--panel); color:var(--muted); font-size:11px; box-shadow:0 2px 6px #0002; }
+.facility-legend label { display:flex; align-items:center; gap:3px; min-height:44px; color:var(--text); cursor:pointer; }
+.facility-legend input { accent-color:#18566b; }
+.facility-popup { rotate:var(--map-heading,0deg); transform-origin:50% 100%; }
+.facility-popup .leaflet-popup-content-wrapper,.facility-popup .leaflet-popup-tip { background:var(--panel-solid); color:var(--text); }
+.facility-popup .leaflet-popup-content { font:12px/1.4 -apple-system,BlinkMacSystemFont,sans-serif; }
+.facility-popup p { margin:8px 0; }
+.facility-popup a { color:var(--blue); }
+@media (min-width:700px) { .facility-legend { left:20px; } }
+
 .course-shadow-line { filter:blur(.6px); }
 .course-paper-line { filter:drop-shadow(0 1px 1px rgba(65,31,19,.28)); }
 .course-ink-line { filter:drop-shadow(.4px .5px 0 rgba(109,21,16,.38)); }
@@ -124,7 +140,7 @@ button { font:inherit; cursor:pointer; touch-action:manipulation; -webkit-tap-hi
 .route-preview-arrow::before { content:""; position:absolute; left:16px; top:-11px; width:6px; height:25px; border-radius:4px 4px 1px 1px; background:var(--paper); box-shadow:0 0 0 1px rgba(94,23,17,.38),0 2px 3px rgba(40,21,14,.25); }
 .route-preview-arrow::after { content:""; position:absolute; left:13px; top:-13px; width:12px; height:12px; border-radius:2px 8px 2px 8px; background:var(--red); border:2px solid var(--paper); rotate:45deg; }
 .route-preview-center { position:absolute; left:10px; top:10px; width:18px; height:18px; border:3px solid var(--paper); border-radius:48% 52% 45% 55%; background:var(--red); box-shadow:0 0 0 4px rgba(227,38,31,.17),1px 3px 6px rgba(47,21,13,.35); }
-.help-card { top:calc(var(--safe-top) + 136px); z-index:900; border-radius:17px 13px 21px 15px; overflow:hidden; }
+.help-card { top:calc(var(--safe-top) + 184px); z-index:900; border-radius:17px 13px 21px 15px; overflow:hidden; }
 .help-card::after { top:0; left:22px; width:72px; height:4px; border-radius:50%; background:var(--red); rotate:-1deg; }
 .help-card[hidden] { display:none; }
 #help-body { max-height:50vh; overflow:auto; padding:13px 15px 14px; color:var(--muted); font-size:12px; line-height:1.42; }
