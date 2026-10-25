@@ -11,7 +11,7 @@ This is a static progressive web app: there is no application server, account, o
 - Shows completed distance, distance remaining, elevation, and course status in a four-column summary.
 - Selects and fits Route when status changes to Off course. A later Location press remains selected unless the status recovers and becomes Off course again.
 - Separates opposing out-and-back passes into parallel Nike-red tracks with an arrow sequence for each travel direction.
-- Includes a full-width elevation profile below the summary. A fixed-size round dot and line show live progress; slide across it to preview the displayed route pass with a forward pointer, then release to return to live tracking.
+- Includes a full-width elevation profile at the bottom. A fixed-size round dot and line show live progress; slide across it to preview the displayed route pass with a forward pointer, then release to return to live tracking.
 - Shows actual GPS position as a blue dot with an uncertainty circle. Whenever GPS or compass heading is available, the blue dot also shows which way the runner is pointing, whether or not heading-up Direction mode is enabled.
 - Rotates only the visual map panes for heading-up navigation, so touch dragging stays aligned with the screen.
 - Smooths compass changes with a 1.5° dead zone and 220 ms response curve.
@@ -20,9 +20,39 @@ This is a static progressive web app: there is no application server, account, o
 - Can be installed on an iPhone Home Screen.
 - Caches the application shell and route data for offline startup.
 
+## Control positions — Thomas, October 24, 2026
+
+Thomas requested the existing scrubber at the bottom and directions/buttons at
+the top (Management request 125533bc7cbee8c78d93, Agenda980). The same slider DOM,
+pointer capture, keyboard preview, release restoration and Route/Location buttons
+are retained. No duplicate controls, helper panel or GPS permission change.
+
+The top cards use natural flow, so hidden off-course directions do not leave an
+empty fixed slot. Short landscape screens put the same cards in two columns;
+safe-area left/right insets protect notches. The same profile sits above the
+bottom safe inset with a 52px touch area. Its progress dot is positioned relative
+to the actual chart within that padding. Course-fit padding measures the current
+controls instead of using their old positions. Very short screens allow the top
+group to scroll rather than collide with the bottom profile. This is layout, not
+a change to matching, safety thresholds, permission prompts or facility facts.
+
+Checks for this layout: existing and added tests exercise the real dot-position
+and course-padding functions, unique slider/button placement, pointer capture and
+restore handlers, safe-area rules, landscape columns and cache versions. These
+are fixtures/source checks, not screenshots or physical-iPhone acceptance.
+
+Native acceptance is blocked by the existing exact Safari window 2895 and its
+pending location sheet. Engineer's read-only diagnosis confirmed it still exists
+after the one close receipt; no close replay, permission answer, navigation,
+new-window or alternate-browser workaround is authorized by that diagnosis.
+Agenda980 retains final narrow/landscape Safari visual and interaction checks;
+Agenda979 retains its facility-specific checks. Resolve the exact window/prompt
+with Thomas before the next supported browser check. Source deployment and HTTP
+readback are independent and should not be left merely prepared.
+
 ## Navigation behavior
 
-The bottom navigation card changes with distance from the route:
+The top navigation card changes with distance from the route:
 
 | Distance from course | Behavior |
 | --- | --- |

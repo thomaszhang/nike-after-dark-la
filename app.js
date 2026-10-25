@@ -148,7 +148,16 @@
   const routeChevronLayer = L.layerGroup().addTo(map);
   const mileMarkerLayer = L.layerGroup().addTo(map);
   const oppositeBearing = (first, second) => Math.abs(signedHeading(first - second)) > 120;
-  map.fitBounds(routeBounds, { paddingTopLeft: [20, 170], paddingBottomRight: [20, 150] });
+  function courseViewPadding() {
+    const top = document.querySelector(".top-controls").getBoundingClientRect().bottom;
+    const bottom = document.getElementById("elevation-profile").getBoundingClientRect().top;
+    return { paddingTopLeft: [20, top + 12], paddingBottomRight: [20, window.innerHeight - bottom + 12] };
+  }
+  const controlsObserver = new ResizeObserver(() => {
+    document.documentElement.style.setProperty("--top-controls-bottom", `${document.querySelector(".top-controls").getBoundingClientRect().bottom + 7}px`);
+  });
+  controlsObserver.observe(document.querySelector(".top-controls"));
+  map.fitBounds(routeBounds, courseViewPadding());
 
   function offsetRoutePoint(point, bearing, pixels = routePassOffsetPixels) {
     const screen = map.latLngToContainerPoint([point.lat, point.lon]);
@@ -664,8 +673,11 @@
     els["elevation-cursor"].setAttribute("x1", chartX.toFixed(2));
     els["elevation-cursor"].setAttribute("x2", chartX.toFixed(2));
     els["elevation-cursor"].classList.toggle("previewing", previewing);
-    els["elevation-progress"].style.left = `${target / totalMeters * 100}%`;
-    els["elevation-progress"].style.top = `${chartY}px`;
+    const chart = els["elevation-chart"].getBoundingClientRect();
+    const profile = els["elevation-profile"].getBoundingClientRect();
+    // SVG has no offsetLeft/offsetTop; measure in the slider's padding box.
+    els["elevation-progress"].style.left = `${chart.left - profile.left - els["elevation-profile"].clientLeft + target / totalMeters * chart.width}px`;
+    els["elevation-progress"].style.top = `${chart.top - profile.top - els["elevation-profile"].clientTop + chartY * chart.height / 30}px`;
     els["elevation-progress"].classList.toggle("previewing", previewing);
   }
 
@@ -861,7 +873,7 @@
     following = false;
     setMapRotationImmediately(0);
     map.invalidateSize({ pan: false, animate: false });
-    map.fitBounds(routeBounds, { paddingTopLeft: [20, 190], paddingBottomRight: [20, 100] });
+    map.fitBounds(routeBounds, courseViewPadding());
     syncMapRotationOrigin();
     renderNavigation();
   }
@@ -887,7 +899,11 @@
     requestWakeLock();
   });
   appearance.addEventListener?.("change", event => applyAppearance(event.matches));
-  const refreshMapLayout = () => window.requestAnimationFrame(() => { map.invalidateSize({ pan: false, animate: false }); renderNavigation(); });
+  const refreshMapLayout = () => window.requestAnimationFrame(() => {
+    map.invalidateSize({ pan: false, animate: false });
+    renderNavigation();
+    renderElevationProgress(previewDistance ?? (liveSummary?.status !== "Off course" ? liveSummary?.progress : NaN), previewDistance !== null);
+  });
   window.addEventListener("resize", refreshMapLayout, { passive: true });
   window.addEventListener("orientationchange", () => setTimeout(refreshMapLayout, 250), { passive: true });
   window.visualViewport?.addEventListener("resize", refreshMapLayout, { passive: true });

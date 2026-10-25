@@ -15,12 +15,13 @@
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icon-180.png">
   <link rel="stylesheet" href="leaflet.css?v=1.9.4">
-  <link rel="stylesheet" href="styles.css?v=29">
+  <link rel="stylesheet" href="styles.css?v=30">
 </head>
 <body>
   <main id="app">
     <div id="map" aria-label="Nike After Dark Los Angeles course map"></div>
 
+    <div class="top-controls">
     <section id="stats" class="stats-card" aria-live="polite">
       <div class="info-header">
         <h1>Nike: After Dark Half Marathon Course (2026)</h1>
@@ -32,14 +33,7 @@
       <div class="stat"><span class="stat-label">REMAINING</span><strong id="remaining">—</strong></div>
       <div class="stat"><span class="stat-label">ELEVATION</span><strong id="live-elevation">—</strong></div>
       <div class="stat"><span class="stat-label">STATUS</span><strong id="course-status">Locating</strong></div>
-      <div id="elevation-profile" class="elevation-profile" role="slider" tabindex="0" aria-orientation="horizontal" aria-label="Course elevation profile. Slide to preview the course." aria-valuemin="0" aria-valuemax="13.3" aria-valuenow="0" aria-valuetext="Start · 26 feet elevation">
-        <svg id="elevation-chart" viewBox="0 0 220 30" preserveAspectRatio="none" aria-hidden="true">
-          <path id="elevation-area" class="elevation-area"></path>
-          <path id="elevation-line" class="elevation-line"></path>
-          <line id="elevation-cursor" class="elevation-cursor" x1="0" x2="0" y1="2" y2="28" hidden></line>
-        </svg>
-        <span id="elevation-progress" class="elevation-progress" hidden></span>
-      </div>
+
     </section>
 
     <section id="direction" class="navigation-card" aria-live="polite" aria-atomic="true">
@@ -68,6 +62,20 @@
       </button>
     </section>
 
+    <aside class="facility-legend" aria-label="Course facilities">
+      <label><input id="aid-visible" type="checkbox" checked> 💧 Aid 1–8 · approx.</label><span>WC · venue toilets</span>
+    </aside>
+    </div>
+
+      <div id="elevation-profile" class="elevation-profile" role="slider" tabindex="0" aria-orientation="horizontal" aria-label="Course elevation profile. Slide to preview the course." aria-valuemin="0" aria-valuemax="13.3" aria-valuenow="0" aria-valuetext="Start · 26 feet elevation">
+        <svg id="elevation-chart" viewBox="0 0 220 30" preserveAspectRatio="none" aria-hidden="true">
+          <path id="elevation-area" class="elevation-area"></path>
+          <path id="elevation-line" class="elevation-line"></path>
+          <line id="elevation-cursor" class="elevation-cursor" x1="0" x2="0" y1="2" y2="28" hidden></line>
+        </svg>
+        <span id="elevation-progress" class="elevation-progress" hidden></span>
+      </div>
+
     <section id="help" class="help-card" hidden>
       <div id="help-body">
         <strong class="help-heading">Before your run</strong>
@@ -75,7 +83,7 @@
           <li>Live tracking starts automatically. Allow precise location when Safari asks.</li>
           <li>Keep this page open while running. Add it to your Home Screen for one-tap access.</li>
           <li>The blue dot is you. Distance, remaining distance, elevation, and status stay at the top.</li>
-          <li>The bottom navigation card combines your next course turn and live heading direction.</li>
+          <li>The top navigation card combines your next course turn and live heading direction.</li>
           <li>Tap <b>Route</b> or <b>Location</b> once to select that view. Tap the selected view again to toggle its Direction sub-button. Dragging the map leaves both views unselected.</li>
           <li>Rotate the map manually with two fingers. Manual rotation turns Direction off.</li>
           <li>Route Direction applies while sliding across the elevation profile. Location Direction rotates the live map to your heading. Releasing the profile restores your previous view.</li>
@@ -89,9 +97,7 @@
       </div>
     </section>
 
-    <aside class="facility-legend" aria-label="Course facilities">
-      <label><input id="aid-visible" type="checkbox" checked> 💧 Aid 1–8 · approx.</label><span>WC · venue toilets</span>
-    </aside>
+
     <div id="location-error" class="error-card" hidden></div>
   </main>
   <script src="leaflet.js?v=1.9.4"></script>
@@ -99,6 +105,6 @@
   <script src="course-elevation.js?v=1"></script>
   <script src="heading-smoothing.js?v=1"></script>
   <script src="course-facilities.js?v=1"></script>
-  <script src="app.js?v=47"></script>
+  <script src="app.js?v=48"></script>
 </body>
 </html>

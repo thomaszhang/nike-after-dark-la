@@ -10,9 +10,9 @@ SW = (ROOT / "sw.js").read_text(encoding="utf-8")
 
 def test_heading_smoother_loads_before_app_and_is_cached():
     assert '<meta name="mobile-web-app-capable" content="yes">' in HTML
-    assert HTML.index('heading-smoothing.js?v=1') < HTML.index('app.js?v=47')
-    assert 'styles.css?v=29' in HTML
-    for asset in ('styles.css?v=29', 'leaflet.css?v=1.9.4', 'leaflet.js?v=1.9.4', 'route-data.js?v=2', 'course-elevation.js?v=1', 'heading-smoothing.js?v=1', 'app.js?v=47'):
+    assert HTML.index('heading-smoothing.js?v=1') < HTML.index('app.js?v=48')
+    assert 'styles.css?v=30' in HTML
+    for asset in ('styles.css?v=30', 'leaflet.css?v=1.9.4', 'leaflet.js?v=1.9.4', 'route-data.js?v=2', 'course-elevation.js?v=1', 'heading-smoothing.js?v=1', 'app.js?v=48'):
         assert f'"{asset}"' in SW
     assert re.search(r'\b\w+\.request\.mode\s*===\s*"navigate"', SW)
     assert '"heading-smoothing.js"' not in SW
@@ -61,7 +61,7 @@ def test_navigation_is_one_bottom_interface():
     assert HTML.count('aria-live="assertive"') == 0
     assert 'class="navigation-card" aria-live="polite" aria-atomic="true"' in HTML
     assert CSS.count(".navigation-card {") >= 1
-    assert re.search(r"\.navigation-card\s*\{[^}]*bottom:", CSS, re.DOTALL)
+    assert ".top-controls .navigation-card" in CSS
     assert "renderGuidance" not in JS
     assert "target.paused" in JS
     assert "els.direction.hidden = Boolean(target && target.paused)" in JS
@@ -263,8 +263,9 @@ def test_elevation_progress_dot_remains_round_when_chart_stretches():
     assert '<circle id="elevation-progress"' not in HTML
     assert '<span id="elevation-progress"' in HTML
     assert re.search(r"\.elevation-progress\s*\{[^}]*width:8px[^}]*height:8px[^}]*border-radius:50%", CSS, re.DOTALL)
-    assert 'els["elevation-progress"].style.left = `${target / totalMeters * 100}%`' in JS
-    assert 'els["elevation-progress"].style.top = `${chartY}px`' in JS
+    assert 'chart.left - profile.left' in JS
+    assert 'target / totalMeters * chart.width' in JS
+    assert 'chartY * chart.height / 30' in JS
 
 
 def test_profile_preview_follows_course_when_direction_is_on_and_waits_for_tiles():
@@ -342,5 +343,5 @@ def test_map_attribution_is_kept_out_of_viewport_but_retained_in_help():
 
 def test_help_describes_automatic_tracking_and_single_bottom_navigation():
     assert "starts automatically" in HTML
-    assert "bottom navigation card" in HTML
+    assert "top navigation card" in HTML
     assert "top banner" not in HTML
