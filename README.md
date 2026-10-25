@@ -127,6 +127,24 @@ maps list businesses, cheer zones and start/finish, not individual aid/toilet
 coordinates. The interactive route JSON has only two start/finish markers;
 no facility legend was substituted from another year. Follow race staff/signs.
 
+Verification: 32 Python tests and 10 Node tests pass, including execution of the
+actual facility creation block, supplies, coordinate range and hide/show toggle.
+Pages deployment succeeded and its HTML/JS/CSS/facilities/service-worker bytes
+were read back matching the release. A real Safari screenshot at 574 × 950 points
+(2× pixels) and intended-page rendered HTML showed all eight aid DOM markers and
+both WC labels. The screenshot was inspected: a location-permission prompt dimmed
+and obscured the middle map, so this is not unobstructed visual or physical iPhone
+acceptance. No location permission was granted/denied for testing. Aid badges were
+then shifted beside mile discs to address the visible overlap; final offset still
+needs an unobstructed screenshot. Offline shell strings/tests pass; an actual
+network-disabled browser reload has not been verified.
+
+The exact owned test window's single close returned success but window 2895 was
+still in a fresh inventory. No close replay or personal-window operation was
+attempted; the saved intent/identity/capture and current ownership were forwarded
+for supported investigation. Keep this uncertainty separate from deployed assets.
+Private evidence is under `~/Library/Application Support/Nike facilities979/`.
+
 `course-facilities.js` stores the small source-annotated dataset locally, loaded
 before `app.js` and cached in the versioned offline shell. No new service, runner
 data, external API request or location upload is added.

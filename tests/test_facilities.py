@@ -33,7 +33,7 @@ def test_facilities_load_and_cache_with_source_visible():
     sw = (ROOT / 'sw.js').read_text()
     assert html.index('course-facilities.js?v=1') < html.index('app.js?v=47')
     assert '"course-facilities.js?v=1"' in sw
-    assert 'nike-la-route-v51' in sw
+    assert 'nike-la-route-v52' in sw
     assert 'WC · venue toilets' in html
     assert 'No unconfirmed restroom pins' in html
     assert 'id="aid-visible" type="checkbox" checked' in html

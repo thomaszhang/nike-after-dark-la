@@ -55,7 +55,7 @@ body.dark-appearance .leaflet-tile-pane { filter:invert(.93) hue-rotate(180deg) 
 
 /* Facility pins use the existing field-guide palette; 44px hit areas, compact ink. */
 .facility-marker { background:transparent; border:0; }
-.facility-badge { display:flex; align-items:center; justify-content:center; gap:1px; width:31px; height:27px; margin:8px 0 0 12px; border:2px solid var(--paper); border-radius:8px 10px 7px 11px; background:#18566b; color:#fff8e9; box-shadow:0 0 0 1px #163d47,1px 2px 5px #0005; font-size:13px; rotate:var(--map-heading,0deg); }
+.facility-badge { display:flex; align-items:center; justify-content:center; gap:1px; width:31px; height:27px; margin:8px 0 0 30px; border:2px solid var(--paper); border-radius:8px 10px 7px 11px; background:#18566b; color:#fff8e9; box-shadow:0 0 0 1px #163d47,1px 2px 5px #0005; font-size:13px; rotate:var(--map-heading,0deg); }
 .facility-badge small { font:800 11px/1 -apple-system,BlinkMacSystemFont,sans-serif; }
 .facility-marker:focus-visible { outline:2px solid var(--blue); outline-offset:1px; border-radius:10px; }
 .facility-legend { position:fixed; z-index:800; left:12px; top:calc(var(--safe-top) + 132px); display:flex; gap:12px; align-items:center; padding:0 9px; min-height:44px; border:1px solid var(--border); border-radius:9px 12px 8px 11px; background:var(--panel); color:var(--muted); font-size:11px; box-shadow:0 2px 6px #0002; }
